@@ -1,0 +1,66 @@
+RefImagePath = "path of image1"
+TestImagePath = "Path of image2"
+
+import cv2
+import numpy as np
+from PIL import Image
+import matplotlib.pyplot as plt
+import time
+
+
+blackThreshold = 50;
+colorThreshold = 40;
+
+TestImage = cv2.imread(TestImagePath)
+RefImage = cv2.imread(RefImagePath)
+
+height, width, channels = TestImage.shape
+print (height, width, channels)
+
+TestImagechnmean = np.mean(TestImage,2)
+print(TestImagechnmean)
+
+RefImagechnmean = np.mean(RefImage,2)
+print(RefImagechnmean)
+
+bth=blackThreshold;
+cth=colorThreshold;
+print(blackThreshold)
+print(colorThreshold)
+
+test_img = cv2.imread(TestImagePath) # Read in your image
+print ('test_img in float ', test_img)
+
+test_stdev = np.std(test_img, axis=2)
+print('test_stdev ',test_stdev)
+
+
+Teststdimage =(((test_stdev>=cth)|(TestImagechnmean<=bth))*-1)+(((test_stdev<cth) & (TestImagechnmean>bth))*1)
+print('Teststdimage ', Teststdimage)
+
+###RefImage###
+ref_img = cv2.imread(RefImagePath) # Read in your image
+print ('ref_out in float', ref_img)
+
+ref_stdev = np.std(ref_img, axis=2)
+print('ref_stdev ', ref_stdev)
+
+Refstdimage =(((ref_stdev>=cth)|(TestImagechnmean<=bth))*-1)+(((ref_stdev<cth) & (TestImagechnmean>bth))*1)
+print('Refstdimage ', Refstdimage)
+
+arr_mul = np.multiply(Teststdimage, Refstdimage)
+print ('arr_mul ', arr_mul)
+
+arr_sum = arr_mul.sum()
+print('arr_sum ', arr_sum)
+
+arr_sum2 = arr_sum.sum()
+print ('arr_sum2 ', arr_sum2)
+
+score1=(arr_sum2/(height*width));
+score = score1*100
+
+print('score ',score)
+
+
+
